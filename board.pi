@@ -1,0 +1,90 @@
+num_cols=7.
+num_rows=6.
+
+black_Piece = 1.
+red_Piece = 2.
+
+
+create_board_state() = Board =>
+
+   EmptyPos = [],
+   foreach (I in 1..num_rows())
+      EmptyPos := EmptyPos ++ [[0,0,0,0,0,0,0]]
+   end,
+   Board = create_board_state(EmptyPos, [0,0,0,0,0,0,0], 1).
+
+create_board_state(Position, ColCount, Turn) = new_map(3, ['pos' = Position, 'colCount' = ColCount, 'turn'=  Turn]).
+
+
+copy_board_state(OldBoard) = NewBoard =>
+   NewBoard = create_board_state(),
+
+   NewBoardPos = NewBoard.get('pos'),
+   OldBoardPos = OldBoard.get('pos'),
+   foreach (Y in 1..num_rows())
+      foreach (X in 1..num_cols())
+         NewBoardPos[Y,X] := OldBoardPos[Y,X],
+      end
+   end,
+
+   NewBoard.put('turn', OldBoard.get('turn')),
+   NewBoardColCount = NewBoard.get('colCount'),
+   OldBoardColCount = OldBoard.get('colCount'),
+   foreach (I in 1..num_cols())
+      NewBoardColCount[I] := OldBoardColCount[I],
+   end.
+
+
+% return legal moves given boardstate
+legal_moves(Board) = LegalMoves =>
+   LegalMoves = [],
+   foreach(C in 1..num_cols())
+      Tmp := Board.get(colCount),
+      if Tmp[C] < num_rows() then
+         LegalMoves := LegalMoves ++ [C]
+      end
+   end.
+
+% does Moves contain Move
+contains(Moves, Move) = DoesContain =>
+   DoesContain = false,
+   foreach (M in Moves)
+      if M = Move then
+         DoesContain := true
+      end,
+   end.
+
+% get opiset player piece
+opposite (0) = 0.
+opposite (Piece) = 3 - Piece.
+
+
+
+% isDraw(Board) bool
+% evaluate(Board, Piece) Eval
+move_Y_and_x_val(Board, Move) = Vals =>
+   Colval = Board.get('colCount'),
+   Vals = (num_rows()-Colval[Move], Move).
+
+make_move(Board, Move) = NewBoard =>
+   NewBoard = copy_board_state(Board),
+   NewColCount = NewBoard.get(colCount),
+   NewColCount[Move] := NewColCount[Move] + 1,
+   NewBoard.put('turn', opposite(turn(Board))),
+
+
+   NewPos = NewBoard.get('pos'),
+   MovePos = move_Y_and_x_val(Board, Move),
+   NewPos[MovePos[1], MovePos[2]] := Board.get('turn').
+
+turn(Board) = Board.get(turn).
+
+print_board(Board) =>
+   BoardPos = Board.get(pos),
+   foreach (Y in 1..num_rows())
+      Row := BoardPos[Y],
+      foreach (X in 1..num_cols())
+         print(Row[X]),
+      end,
+      print("\n")
+   end.

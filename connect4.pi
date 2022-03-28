@@ -1,0 +1,47 @@
+generate_segments = Segments =>
+   SegmentLength = 4,
+	Segments = [],
+	foreach (C in 1..num_cols())
+		foreach (R in 1..(num_rows()-SegmentLength+1))
+			Segments := Segments ++ [[[R, C], [R+1, C], [R+2, C], [R+3, C]]]
+		end
+	end,
+
+	foreach (C in 1..(num_cols()-SegmentLength+1))
+		foreach (R in 1..num_rows())
+			Segments := Segments ++ [[[R, C], [R, C+1], [R, C+2], [R, C+3]]]
+		end
+	end,
+
+   foreach (C in 1..(num_cols()-SegmentLength+1))
+		foreach (R in 1..(num_rows()-SegmentLength+1))
+			Segments := Segments ++ [[[R, C], [R+1, C+1], [R+2, C+2], [R+3, C+3]]]
+		end
+	end,
+
+   foreach (C in 1..(num_cols()-SegmentLength+1))
+		foreach (R in (SegmentLength-1)..(num_rows()))
+			Segments := Segments ++  [[[R, C], [R-1, C+1], [R-2, C+2], [R-3, C+3]]]
+		end
+	end.
+
+iswin(Board) = Iswin =>
+	Iswin = false,
+	BoardPos = Board.get('pos'),
+	foreach (Seg in generate_segments())
+		if (BoardPos[Seg[1,1], Seg[1, 2]]  != 0 && BoardPos[Seg[1,1], Seg[1, 2]] == BoardPos[Seg[2,1], Seg[2, 2]] && BoardPos[Seg[2,1], Seg[2, 2]] == BoardPos[Seg[3,1], Seg[3, 2]] && BoardPos[Seg[3,1], Seg[3, 2]] == BoardPos[Seg[4,1], Seg[4, 2]]) then
+			println("win"),
+			Iswin := true
+		end,
+	end.
+
+isdraw(Board) = Isdraw =>
+	Isdraw = false,
+	ColCount = Board.get('colCount'),
+	ColSum = 0,
+	foreach (I in 1..num_cols())
+		ColSum := ColSum + ColCount[I]
+	end,
+	if ColSum >= 42 then
+		Isdraw := true
+	end.
