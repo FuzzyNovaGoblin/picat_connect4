@@ -4,18 +4,18 @@ num_rows=6.
 black_Piece = 1.
 red_Piece = 2.
 
-
+% create default board
 create_board_state() = Board =>
-
    EmptyPos = [],
    foreach (I in 1..num_rows())
       EmptyPos := EmptyPos ++ [[0,0,0,0,0,0,0]]
    end,
    Board = create_board_state(EmptyPos, [0,0,0,0,0,0,0], 1).
 
+% create board with given values
 create_board_state(Position, ColCount, Turn) = new_map(3, ['pos' = Position, 'colCount' = ColCount, 'turn'=  Turn]).
 
-
+% create copy of board
 copy_board_state(OldBoard) = NewBoard =>
    NewBoard = create_board_state(),
 
@@ -59,13 +59,13 @@ opposite (0) = 0.
 opposite (Piece) = 3 - Piece.
 
 
-
-% isDraw(Board) bool
-% evaluate(Board, Piece) Eval
+% get X and Y val of move
 move_Y_and_x_val(Board, Move) = Vals =>
    Colval = Board.get('colCount'),
    Vals = (num_rows()-Colval[Move], Move).
 
+
+% create a new board with given move
 make_move(Board, Move) = NewBoard =>
    NewBoard = copy_board_state(Board),
    NewColCount = NewBoard.get(colCount),
@@ -79,6 +79,8 @@ make_move(Board, Move) = NewBoard =>
 
 turn(Board) = Board.get(turn).
 
+
+% print board state
 print_board(Board) =>
    BoardPos = Board.get(pos),
    foreach (Y in 1..num_rows())

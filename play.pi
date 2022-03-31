@@ -10,7 +10,6 @@ main =>
       Board := make_move(Board, get_player_move(Board)),
       Iswin := iswin(Board),
       Isdraw := isdraw(Board),
-   % println(Board.get('colCount'))
    end,
    print_board(Board),
 
@@ -21,10 +20,6 @@ main =>
    elseif (Isdraw == true) then
       println("Game is draw")
    end.
-
-   % println(legal_moves(Board)).
-   % println(get_player_move(Board)),
-   % println(contains(legal_moves(Board), 1)).
 
 %%% things
 get_player_move(Board) = Move =>
